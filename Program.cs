@@ -20,7 +20,7 @@ namespace infotv
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:80")
+                .UseUrls("http://*:80")
                 .Build();
     }
 }
