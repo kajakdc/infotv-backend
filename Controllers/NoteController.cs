@@ -86,5 +86,43 @@ namespace infotv.Controllers
             m_context.SaveChanges();
             return new NoContentResult();
         }
+    
+        [Route("/all")]
+        [HttpDelete]
+        public IActionResult Delete ()
+        {
+            int count = (int)m_context.NoteItems.Count();
+
+            if (count == 0)
+            {
+                return new NoContentResult();
+            }
+
+            m_context.NoteItems.RemoveRange(m_context.NoteItems);
+            m_context.SaveChanges();
+            return new NoContentResult();
+        }
+
+        [Route("/all")]
+        [HttpPut]
+        public IActionResult UpdateAll ([FromBody] int Active)
+        {
+            if (Active != 0 || Active != 1)
+            {
+                return BadRequest();
+            }
+
+            // Query fo all notes with active different than given
+            var notes = from n in m_context.NoteItems where n.Active != Active select n;
+
+            foreach (var n in notes)
+            {
+                n.Active = Active;
+                m_context.NoteItems.Update(n);
+            }
+            
+            m_context.SaveChanges();
+            return new NoContentResult();
+        }
     }
 }

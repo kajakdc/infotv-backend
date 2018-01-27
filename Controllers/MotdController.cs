@@ -39,8 +39,10 @@ namespace infotv.Controllers
         [HttpPost]
         public IActionResult Create ([FromBody] MotdItem item)
         {
+
             if (item == null)
             {
+                Console.WriteLine("MITÄ VITTU");
                 return BadRequest();
             }
             
@@ -82,6 +84,22 @@ namespace infotv.Controllers
             }
 
             m_context.MotdItems.Remove(motd);
+            m_context.SaveChanges();
+            return new NoContentResult();
+        }
+
+        [Route("/all")]
+        [HttpDelete]
+        public IActionResult Delete ()
+        {
+            int count = (int)m_context.MotdItems.Count();
+
+            if (count == 0)
+            {
+                return new NoContentResult();
+            }
+
+            m_context.MotdItems.RemoveRange(m_context.MotdItems);
             m_context.SaveChanges();
             return new NoContentResult();
         }
