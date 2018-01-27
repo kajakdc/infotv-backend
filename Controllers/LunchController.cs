@@ -9,26 +9,27 @@ using infotv.Models;
 namespace infotv.Controllers
 {
     [Route("/[controller]")]
-    public class MotdController : Controller
+    public class LunchController : Controller
     {
 
         private readonly InfoTVContext m_context;
 
-        public MotdController(InfoTVContext context)
+        public LunchController(InfoTVContext context)
         {
             m_context = context;
         }
 
+
         [HttpGet]
-        public IEnumerable<MotdItem> GetAll()
+        public IEnumerable<LunchItem> GetAll()
         {
-            return m_context.MotdItems.ToList();
+            return m_context.LunchItems.ToList();
         }   
 
-        [HttpGet("{ID}", Name = "GetMotd")]
+        [HttpGet("{ID}", Name = "GetLunch")]
         public IActionResult GetByID (long ID)
         {
-            var item = m_context.MotdItems.FirstOrDefault(t => t.ID == ID);
+            var item = m_context.LunchItems.FirstOrDefault(t => t.ID == ID);
             if (item == null)
             {
                 return NotFound();
@@ -37,37 +38,37 @@ namespace infotv.Controllers
         }  
 
         [HttpPost]
-        public IActionResult Create ([FromBody] MotdItem item)
+        public IActionResult Create ([FromBody] LunchItem item)
         {
             if (item == null)
             {
                 return BadRequest();
             }
             
-            m_context.MotdItems.Add(item);
+            m_context.LunchItems.Add(item);
             m_context.SaveChanges();
 
-            return CreatedAtRoute("GetMotd", new { ID = item.ID }, item);
+            return CreatedAtRoute("GetLunch", new { ID = item.ID }, item);
         }
 
         [HttpPut(template: "{ID}")]
-        public IActionResult Update (long ID, [FromBody] MotdItem item)
+        public IActionResult Update (long ID, [FromBody] LunchItem item)
         {
             if (item == null || item.ID != ID)
             {
                 return BadRequest();
             }
 
-            var motd = m_context.MotdItems.FirstOrDefault(t => t.ID == ID);
-            if (motd == null)
+            var luch = m_context.LunchItems.FirstOrDefault(t => t.ID == ID);
+            if (luch == null)
             {
                 return NotFound();
             }
 
-            motd.Data = item.Data;
-            motd.Type = item.Type;
+            luch.CreatedAt = DateTimeOffset.Now.ToUnixTimeSeconds();
+            luch.Food = item.Food;
 
-            m_context.MotdItems.Update(motd);
+            m_context.LunchItems.Update(luch);
             m_context.SaveChanges();
             return new NoContentResult();
         }
@@ -75,13 +76,13 @@ namespace infotv.Controllers
         [HttpDelete("{ID}")]
         public IActionResult Delete (long ID)
         {
-            var motd = m_context.MotdItems.FirstOrDefault(t => t.ID == ID);
-            if (motd == null)
+            var luch = m_context.LunchItems.FirstOrDefault(t => t.ID == ID);
+            if (luch == null)
             {
                 return NotFound();
             }
 
-            m_context.MotdItems.Remove(motd);
+            m_context.LunchItems.Remove(luch);
             m_context.SaveChanges();
             return new NoContentResult();
         }

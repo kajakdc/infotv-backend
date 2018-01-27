@@ -23,9 +23,12 @@ namespace infotv
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string dbconn = Environment.GetEnvironmentVariable("DBCONN");
+            string rediscon = Environment.GetEnvironmentVariable("REDISCONN");
+
             services.AddMvc();
             services.AddDbContext<InfoTVContext>(
-                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
+                options => options.UseMySql(dbconn)
             );
         }
 
@@ -36,8 +39,6 @@ namespace infotv
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
 
             //app.UseStaticFiles();
             app.UsePathBase("/api");
