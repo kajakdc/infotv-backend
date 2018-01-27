@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using infotv.Models;
+using Microsoft.Extensions.Logging;
 
 namespace infotv
 {
@@ -33,14 +34,17 @@ namespace infotv
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging")); //log lev
+            loggerFactory.AddDebug(); //does all log levels
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
             app.UsePathBase("/api");
             app.UseMvc(
                 routes => {
